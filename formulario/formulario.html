@@ -52,7 +52,6 @@
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada para el efecto flotante */
             width: 90%;
             max-width: 800px;
-            /* Aquí NO se aplica la altura fija de 600px o min/max-height que se añadió antes para el "pedazo azul" */
             min-height: 500px; /* Se mantiene una min-height razonable */
             max-height: calc(100vh - 40px); /* Ajusta a la altura del viewport - padding body */
             box-sizing: border-box;
@@ -77,7 +76,6 @@
             align-items: center;
             justify-content: flex-end;
             gap: 8px;
-            /* NO se aplica flex-shrink: 0; aquí */
             cursor: pointer; /* Se mantiene el cursor para indicar clicable */
         }
         .window-button {
@@ -94,8 +92,6 @@
         .form-content-wrapper {
             display: flex;
             flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
-            /* NO se aplica height: 100%; aquí */
-            /* Se mantiene align-items: stretch; ya que es una propiedad de flexbox */
             align-items: stretch;
         }
 
@@ -104,7 +100,6 @@
             padding: 35px;
             box-sizing: border-box;
             background-color: var(--form-bg); /* Fondo blanco del formulario */
-            /* NO se aplica height: 100%; aquí */
             overflow-y: auto; /* Scrollable si el contenido es demasiado largo */
             -webkit-overflow-scrolling: touch;
         }
@@ -119,7 +114,6 @@
             overflow: hidden;
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
-            /* NO se aplica height: 100%; aquí */
             min-height: 100%; /* Este es crucial para que flexbox estire ambos lados (el "pedazo azul" podría aparecer si el form-area es más corto) */
         }
         /* Formas internas de la ilustración simplificadas */
@@ -350,7 +344,7 @@
                     <p>Por favor, describe el inconveniente con el mayor detalle posible para que podamos ayudarte.</p>
                 </div>
 
-                <form id="bugReportForm" action="https://formspree.io/f/xanjjnbp" method="POST">
+                <form id="bugReportForm" action="https://formspree.io/f/mnnvvnbv" method="POST">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="gameName">Nombre del Juego:</label>
@@ -424,57 +418,75 @@
     </div>
 
     <script>
-        // Encapsular todo el JavaScript para asegurar que el DOM esté cargado
         document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bugReportForm');
+            const confirmationMsg = document.getElementById('confirmationMessage');
 
-            // Evento para el envío del formulario
-            document.getElementById('bugReportForm').addEventListener('submit', function(event) {
-                event.preventDefault(); // <--- AÑADIDO: Evita la recarga de la página por el envío del formulario
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Detiene el envío normal del formulario
 
-                const confirmationMsg = document.getElementById('confirmationMessage');
-                confirmationMsg.style.display = 'block';
+                const formData = new FormData(form); // Obtiene los datos del formulario
 
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json' // Importante para que Formspree responda con JSON
+                        }
+                    });
+
+                    if (response.ok) {
+                        confirmationMsg.textContent = '¡Gracias! Tu reporte ha sido enviado con éxito.';
+                        confirmationMsg.style.backgroundColor = '#28A745'; // Verde para éxito
+                        confirmationMsg.style.display = 'block';
+
+                        // Limpiar el formulario
+                        form.reset();
+                        document.querySelectorAll('input[name="Severidad"]').forEach(radio => radio.checked = false);
+
+                    } else {
+                        const data = await response.json();
+                        let errorMessage = 'Oops! Hubo un problema al enviar tu reporte.';
+                        if (data.errors) {
+                            errorMessage = data.errors.map(error => error.message).join(', ');
+                        }
+                        confirmationMsg.textContent = errorMessage;
+                        confirmationMsg.style.backgroundColor = '#DC3545'; // Rojo para error
+                        confirmationMsg.style.display = 'block';
+                    }
+
+                } catch (error) {
+                    console.error('Error al enviar el formulario:', error);
+                    confirmationMsg.textContent = 'Hubo un error de conexión. Inténtalo de nuevo.';
+                    confirmationMsg.style.backgroundColor = '#DC3545'; // Rojo para error
+                    confirmationMsg.style.display = 'block';
+                }
+
+                // Ocultar el mensaje después de 5 segundos
                 setTimeout(() => {
                     confirmationMsg.style.display = 'none';
-                    // Opcional: Si quieres redirigir *después* de que el mensaje de confirmación desaparezca
-                    // window.location.href = '/tienda/tienda.html';
-                }, 5000); // 5 segundos
-
-                // Reiniciar el formulario después de un pequeño retraso
-                setTimeout(() => {
-                    const form = document.getElementById('bugReportForm');
-                    form.reset();
-                    const radioButtons = document.querySelectorAll('input[name="Severidad"]');
-                    radioButtons.forEach(radio => radio.checked = false);
-                }, 100);
+                }, 5000);
             });
 
-            // Evento para el clic en la ventana del formulario
-            const formWindow = document.querySelector('.form-window');
-            if (formWindow) {
-                formWindow.addEventListener('click', (event) => {
-                    // console.log("Clic detectado en formWindow o uno de sus hijos.", event.target); // Para depuración
-                    // console.log("Current target:", event.currentTarget); // Para depuración
-
-                    // AÑADIDO: Comprobar si el clic no es en un input o textarea para evitar interrupciones
-                    const tagName = event.target.tagName;
-                    if (tagName !== 'INPUT' && tagName !== 'SELECT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON' && tagName !== 'LABEL') {
-                        window.location.href = '/tienda/tienda.html'; // Usar ruta absoluta
-                        // O prueba con una ruta relativa si estás abriendo el archivo directamente:
-                        // window.location.href = 'tienda/tienda.html';
-                        // window.location.href = '../tienda/tienda.html'; // Si tu HTML está en una subcarpeta
-                    } else {
-                        // console.log("Clic en un elemento interactivo, no redirigir.");
-                    }
-                });
-            }
-
-            // Opcional: Si quieres que solo la barra de título redirija
+            // Evento para el clic en la barra de título (simulando cerrar/salir)
             const windowHeader = document.querySelector('.window-header');
             if (windowHeader) {
                 windowHeader.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Evita que el clic se propague a formWindow si también tiene un listener
-                    window.location.href = '/tienda/tienda.html';
+                    // Evita que el clic se propague al div 'form-window' si también tiene un listener
+                    event.stopPropagation();
+                    window.location.href = '/tienda/tienda.html'; // Usar ruta absoluta
+                });
+            }
+
+            // Si quieres que un clic en CUALQUIER PARTE de la ventana del formulario (excepto inputs) redirija:
+            const formWindow = document.querySelector('.form-window');
+            if (formWindow) {
+                formWindow.addEventListener('click', (event) => {
+                    const tagName = event.target.tagName;
+                    if (tagName !== 'INPUT' && tagName !== 'SELECT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON' && tagName !== 'LABEL') {
+                        window.location.href = '/tienda/tienda.html';
+                    }
                 });
             }
         });
