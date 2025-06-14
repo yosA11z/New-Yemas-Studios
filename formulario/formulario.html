@@ -52,8 +52,8 @@
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada para el efecto flotante */
             width: 90%;
             max-width: 800px;
-            /* Ajuste clave: min-height basado en el contenido para evitar colapso pero permitir estiramiento */
-            min-height: 600px; /* Un poco más de altura base para que los campos quepan cómodamente */
+            /* Aquí NO se aplica la altura fija de 600px o min/max-height que se añadió antes para el "pedazo azul" */
+            min-height: 500px; /* Se mantiene una min-height razonable */
             max-height: calc(100vh - 40px); /* Ajusta a la altura del viewport - padding body */
             box-sizing: border-box;
             display: flex;
@@ -77,6 +77,8 @@
             align-items: center;
             justify-content: flex-end;
             gap: 8px;
+            /* NO se aplica flex-shrink: 0; aquí */
+            cursor: pointer; /* Se mantiene el cursor para indicar clicable */
         }
         .window-button {
             width: 12px;
@@ -92,7 +94,8 @@
         .form-content-wrapper {
             display: flex;
             flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
-            /* Ajuste clave: Asegura que los items flexibles se estiren a la misma altura */
+            /* NO se aplica height: 100%; aquí */
+            /* Se mantiene align-items: stretch; ya que es una propiedad de flexbox */
             align-items: stretch;
         }
 
@@ -101,7 +104,7 @@
             padding: 35px;
             box-sizing: border-box;
             background-color: var(--form-bg); /* Fondo blanco del formulario */
-            /* Ajuste clave: eliminar max-height y min-height aquí para que flex lo gestione */
+            /* NO se aplica height: 100%; aquí */
             overflow-y: auto; /* Scrollable si el contenido es demasiado largo */
             -webkit-overflow-scrolling: touch;
         }
@@ -116,8 +119,8 @@
             overflow: hidden;
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
-            /* Aseguramos que la altura de la ilustración no sea fija */
-            min-height: 100%; /* Este es crucial para que flexbox estire ambos lados */
+            /* NO se aplica height: 100%; aquí */
+            min-height: 100%; /* Este es crucial para que flexbox estire ambos lados (el "pedazo azul" podría aparecer si el form-area es más corto) */
         }
         /* Formas internas de la ilustración simplificadas */
         .illustration-area::before, .illustration-area::after {
@@ -347,7 +350,7 @@
                     <p>Por favor, describe el inconveniente con el mayor detalle posible para que podamos ayudarte.</p>
                 </div>
 
-                <form id="bugReportForm" action="https://formspree.io/f/mldnndgv" method="POST">
+                <form id="bugReportForm" action="https://formspree.io/f/xanjjnbp" method="POST">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="gameName">Nombre del Juego:</label>
@@ -421,24 +424,60 @@
     </div>
 
     <script>
-        document.getElementById('bugReportForm').addEventListener('submit', function(event) {
-            const confirmationMsg = document.getElementById('confirmationMessage');
-            confirmationMsg.style.display = 'block';
+        // Encapsular todo el JavaScript para asegurar que el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
 
-            setTimeout(() => {
-                confirmationMsg.style.display = 'none';
-            }, 5000); // 5 segundos
+            // Evento para el envío del formulario
+            document.getElementById('bugReportForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // <--- AÑADIDO: Evita la recarga de la página por el envío del formulario
 
-            // Opcional: Reiniciar el formulario después de un pequeño retraso
-            setTimeout(() => {
-                const form = document.getElementById('bugReportForm');
-                form.reset();
-                const radioButtons = document.querySelectorAll('input[name="Severidad"]');
-                radioButtons.forEach(radio => radio.checked = false);
-            }, 100);
+                const confirmationMsg = document.getElementById('confirmationMessage');
+                confirmationMsg.style.display = 'block';
+
+                setTimeout(() => {
+                    confirmationMsg.style.display = 'none';
+                    // Opcional: Si quieres redirigir *después* de que el mensaje de confirmación desaparezca
+                    // window.location.href = '/tienda/tienda.html';
+                }, 5000); // 5 segundos
+
+                // Reiniciar el formulario después de un pequeño retraso
+                setTimeout(() => {
+                    const form = document.getElementById('bugReportForm');
+                    form.reset();
+                    const radioButtons = document.querySelectorAll('input[name="Severidad"]');
+                    radioButtons.forEach(radio => radio.checked = false);
+                }, 100);
+            });
+
+            // Evento para el clic en la ventana del formulario
+            const formWindow = document.querySelector('.form-window');
+            if (formWindow) {
+                formWindow.addEventListener('click', (event) => {
+                    // console.log("Clic detectado en formWindow o uno de sus hijos.", event.target); // Para depuración
+                    // console.log("Current target:", event.currentTarget); // Para depuración
+
+                    // AÑADIDO: Comprobar si el clic no es en un input o textarea para evitar interrupciones
+                    const tagName = event.target.tagName;
+                    if (tagName !== 'INPUT' && tagName !== 'SELECT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON' && tagName !== 'LABEL') {
+                        window.location.href = '/tienda/tienda.html'; // Usar ruta absoluta
+                        // O prueba con una ruta relativa si estás abriendo el archivo directamente:
+                        // window.location.href = 'tienda/tienda.html';
+                        // window.location.href = '../tienda/tienda.html'; // Si tu HTML está en una subcarpeta
+                    } else {
+                        // console.log("Clic en un elemento interactivo, no redirigir.");
+                    }
+                });
+            }
+
+            // Opcional: Si quieres que solo la barra de título redirija
+            const windowHeader = document.querySelector('.window-header');
+            if (windowHeader) {
+                windowHeader.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Evita que el clic se propague a formWindow si también tiene un listener
+                    window.location.href = '/tienda/tienda.html';
+                });
+            }
         });
-        //yaestufas//
     </script>
-    
 </body>
 </html>
