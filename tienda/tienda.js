@@ -31,11 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addToCartBtn = document.getElementById('addToCartBtn');
     const addToWishlistBtn = document.getElementById('addToWishlistBtn');
 
-    if (buyNowBtn) {
-        buyNowBtn.addEventListener('click', () => {
-            alert('¡Gracias por tu compra de Arithmia! Redireccionando al proceso de pago...');
-        });
-    }
+    
 
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', () => {
@@ -257,3 +253,88 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', checkScrollArrows);
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//PASARELA DE PAGO
+
+
+const STRIPE_PUBLISHABLE_KEY = "pk_test_51RZwAcRUVRDzQwxh2L7IS1aEX0S8vLNIq2H4ixDysVGFgx6fOg3iKEYn1ylTsbneLa880uSAXGoEUEi2ZdJyKvoc00qbU0bknn";
+
+
+const SPECIFIC_PRICE_ID = "price_1RZwtHRUVRDzQwxhZ1A3MDxA";
+
+const $d = document;
+const $payButton = $d.getElementById("buyNowBtn"); // Asegúrate de tener un botón con id="pay-button" en tu HTML
+const $messageContainer = $d.getElementById("message-container"); // Un div para mostrar mensajes al usuario
+
+
+const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+
+
+$payButton.addEventListener("click", async (e) => {
+    try {
+       
+        const result = await stripe.redirectToCheckout({
+            lineItems: [{
+                price: SPECIFIC_PRICE_ID, 
+                quantity: 1, 
+            }],
+            mode: "payment",
+            
+            successUrl: "http://127.0.0.1:3000/pasareladepago/succes.html", 
+            cancelUrl: "http://127.0.0.1:3000/pasareladepago/cancel.html"   
+        });
+
+        if (result.error) {
+            // Si hay un error ANTES de la redirección (ej. configuración incorrecta)
+            $messageContainer.textContent = `Error: ${result.error.message}`;
+            console.error("Error en redirectToCheckout:", result.error.message);
+        }
+    } catch (error) {
+        // Captura errores de red o errores inesperados
+        $messageContainer.textContent = `Ocurrió un error inesperado: ${error.message}`;
+        console.error("Error al intentar redirigir a Checkout:", error);
+    }
+});
+

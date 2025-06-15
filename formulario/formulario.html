@@ -480,15 +480,7 @@
             }
 
             // Si quieres que un clic en CUALQUIER PARTE de la ventana del formulario (excepto inputs) redirija:
-            const formWindow = document.querySelector('.form-window');
-            if (formWindow) {
-                formWindow.addEventListener('click', (event) => {
-                    const tagName = event.target.tagName;
-                    if (tagName !== 'INPUT' && tagName !== 'SELECT' && tagName !== 'TEXTAREA' && tagName !== 'BUTTON' && tagName !== 'LABEL') {
-                        window.location.href = '/tienda/tienda.html';
-                    }
-                });
-            }
+            
         });
     </script>
 </body>
