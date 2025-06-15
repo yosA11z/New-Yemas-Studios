@@ -320,8 +320,8 @@ $payButton.addEventListener("click", async (e) => {
             }],
             mode: "payment",
             // Asegúrate de que estas URLs sean válidas en tu servidor o dominio.
-            successUrl: "https://tudominio.com/pasareladepago/succes.html", // ¡Actualiza a tu dominio real!
-            cancelUrl: "https://tudominio.com/pasareladepago/cancel.html" // ¡Actualiza a tu dominio real!
+            successUrl: "/pasareladepago/succes.html", // ¡Actualiza a tu dominio real!
+            cancelUrl: "/pasareladepago/cancel.html" // ¡Actualiza a tu dominio real!
         });
 
         if (result.error) {
