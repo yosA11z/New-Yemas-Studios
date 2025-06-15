@@ -322,8 +322,8 @@ $payButton.addEventListener("click", async (e) => {
             }],
             mode: "payment",
             
-            successUrl: "https://yemas-studios.vercel.app/pasareladepago/succes.html", 
-            cancelUrl: "https://yemas-studios.vercel.app/pasareladepago/cancel.html"   
+            successUrl: "/pasareladepago/succes.html", 
+            cancelUrl: "/pasareladepago/cancel.html"   
         });
 
         if (result.error) {
