@@ -299,41 +299,40 @@ document.addEventListener('DOMContentLoaded', () => {
 //PASARELA DE PAGO
 
 
+// PASARELA DE PAGO
+
 const STRIPE_PUBLISHABLE_KEY = "pk_test_51RZwAcRUVRDzQwxh2L7IS1aEX0S8vLNIq2H4ixDysVGFgx6fOg3iKEYn1ylTsbneLa880uSAXGoEUEi2ZdJyKvoc00qbU0bknn";
-
-
 const SPECIFIC_PRICE_ID = "price_1RZwtHRUVRDzQwxhZ1A3MDxA";
 
 const $d = document;
-const $payButton = $d.getElementById("buyNowBtn"); // Asegúrate de tener un botón con id="pay-button" en tu HTML
-
+const $payButton = $d.getElementById("buyNowBtn"); // Asegúrate de que el ID "buyNowBtn" sea el correcto en tu HTML
 
 const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
-
 $payButton.addEventListener("click", async (e) => {
+    e.preventDefault(); // Añade esta línea si el botón está dentro de un <form> para evitar recarga de página
+
     try {
-       
         const result = await stripe.redirectToCheckout({
             lineItems: [{
-                price: SPECIFIC_PRICE_ID, 
-                quantity: 1, 
+                price: SPECIFIC_PRICE_ID,
+                quantity: 1,
             }],
             mode: "payment",
-            
-            successUrl: "/pasareladepago/succes.html", 
-            cancelUrl: "/pasareladepago/cancel.html"
+            // Asegúrate de que estas URLs sean válidas en tu servidor o dominio.
+            successUrl: "https://tudominio.com/pasareladepago/succes.html", // ¡Actualiza a tu dominio real!
+            cancelUrl: "https://tudominio.com/pasareladepago/cancel.html" // ¡Actualiza a tu dominio real!
         });
 
         if (result.error) {
-            // Si hay un error ANTES de la redirección (ej. configuración incorrecta)
-            $messageContainer.textContent = `Error: ${result.error.message}`;
+            // Si hay un error ANTES de la redirección, lo puedes ver en la consola.
             console.error("Error en redirectToCheckout:", result.error.message);
+            // Si quieres, aquí podrías mostrar un alert o mensaje de alguna otra forma:
+            // alert(`Error al procesar el pago: ${result.error.message}`);
         }
     } catch (error) {
-        // Captura errores de red o errores inesperados
-        $messageContainer.textContent = `Ocurrió un error inesperado: ${error.message}`;
-        console.error("Error al intentar redirigir a Checkout:", error);
+        // Captura errores de red o errores inesperados antes de la redirección.
+        console.error("Ocurrió un error inesperado al intentar redirigir a Checkout:", error);
+        // alert(`Ocurrió un error inesperado: ${error.message}`);
     }
 });
-
