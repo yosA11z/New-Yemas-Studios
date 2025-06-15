@@ -306,7 +306,6 @@ const SPECIFIC_PRICE_ID = "price_1RZwtHRUVRDzQwxhZ1A3MDxA";
 
 const $d = document;
 const $payButton = $d.getElementById("buyNowBtn"); // Asegúrate de tener un botón con id="pay-button" en tu HTML
-const $messageContainer = $d.getElementById("message-container"); // Un div para mostrar mensajes al usuario
 
 
 const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
@@ -323,7 +322,7 @@ $payButton.addEventListener("click", async (e) => {
             mode: "payment",
             
             successUrl: "/pasareladepago/succes.html", 
-            cancelUrl: "/pasareladepago/cancel.html"   
+            cancelUrl: "/pasareladepago/cancel.html"
         });
 
         if (result.error) {
