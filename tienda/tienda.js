@@ -320,20 +320,19 @@ $payButton.addEventListener("click", async (e) => {
             }],
             mode: "payment",
             // Asegúrate de que estas URLs sean válidas en tu servidor o dominio.
-            successUrl: "https://new-yemas-studios.vercel.app/pasareladepago/succes.html", // ¡Actualiza a tu dominio real!
+            successUrl: "https://new-yemas-studios.vercel.app/pasareladepago/success.html", // ¡Actualiza a tu dominio real!
             cancelUrl: "https://new-yemas-studios.vercel.app/pasareladepago/cancel.html" // ¡Actualiza a tu dominio real!
         });
 
         if (result.error) {
-            // Si hay un error ANTES de la redirección, lo puedes ver en la consola.
+            
             console.error("Error en redirectToCheckout:", result.error.message);
-            // Si quieres, aquí podrías mostrar un alert o mensaje de alguna otra forma:
-            // alert(`Error al procesar el pago: ${result.error.message}`);
+            
         }
     } catch (error) {
-        // Captura errores de red o errores inesperados antes de la redirección.
+        
         console.error("Ocurrió un error inesperado al intentar redirigir a Checkout:", error);
-        // alert(`Ocurrió un error inesperado: ${error.message}`);
+        
     }
 });
 
