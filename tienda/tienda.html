@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arithmia en la Tienda</title>
+    <link rel="stylesheet" href="/tienda/tienda.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="#" class="store-logo">YEMA´S STORE</a>
+            </div>
+            <div class="header-right">
+                <a href="#" class="icon-link"><i class="fas fa-globe"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="game-page">
+        <section class="game-hero">
+            <h1>Arithmia</h1>
+            <nav class="game-tabs">
+                <a href="#" class="active" data-tab="resumen">Resumen</a>
+                <a href="#" data-tab="logros">Logros</a>
+            </nav>
+
+            <div class="hero-main-content">
+                <div class="hero-media">
+                    <video controls poster="/sliders/logoyemas.webp" id="mainVideo" style="display: block;">
+                        <source src="/assets/videos/Gameplay.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                    <img src="" alt="Imagen principal del juego" id="mainImage" style="display: none;">
+                </div>
+
+                <div class="hero-details">
+                    <img src="/sliders/logoyemas.webp" alt="Arithmia Logo" class="game-logo">
+                    <div class="rating">
+                        <div class="age-rating">ESRB Teen</div>
+                        <p class="rating-description">Sangre, Lenguaje Fuerte, Violencia</p>
+                    </div>
+                    <div class="purchase-options">
+                        <div class="base-game">Juego base</div>
+                        <div class="price">
+                            <span class="original-price">15.000$</span>
+                            <span class="final-price">10.000$</span>
+                        </div>
+                        <p class="discount-timer"></p>
+                        <button class="buy-btn" id="buyNowBtn">Preordenar ahora</button>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-thumbnails">
+                <button class="nav-arrow left-arrow">‹</button>
+                <div class="thumbnails-container">
+                    <img src="/sliders/image.png" alt="Captura de pantalla de Arithmia 1" class="thumbnail active" data-type="video" data-full-url="/assets/videos/Gameplay.mp4">
+                    <img src="/sliders/slider1.webp" alt="Captura de pantalla de Arithmia 2" class="thumbnail" data-type="image" data-full-url="/sliders/slider1.webp">
+                    <img src="/sliders/slider2.webp" alt="Captura de pantalla de Arithmia 3" class="thumbnail" data-type="image" data-full-url="/sliders/slider2.webp">
+                    <img src="/sliders/slider3.webp" alt="Captura de pantalla de Arithmia 4" class="thumbnail" data-type="image" data-full-url="/sliders/slider3.webp">
+                    <img src="/sliders/slider4.webp" alt="Captura de pantalla de Arithmia 5" class="thumbnail" data-type="image" data-full-url="/sliders/slider4.webp">
+                    <img src="/sliders/slider5.webp" alt="Captura de pantalla de Arithmia 6" class="thumbnail" data-type="image" data-full-url="/sliders/slider5.webp">
+                    <img src="/sliders/slider6.webp" alt="Captura de pantalla de Arithmia 7" class="thumbnail" data-type="image" data-full-url="/sliders/slider6.webp">
+                </div>
+                <button class="nav-arrow right-arrow">›</button>
+            </div>
+            </section>
+
+        <div class="content-and-sidebar">
+            <div class="main-content-area">
+                <section class="game-description game-description-top">
+                    <p class="game-tagline">Explora un emotivo juego de ciencia ficción que supone una mezcla única de aventura, supervivencia y matemáticas. Juega como Cifro, un prodigio matemático que tendrá que aprovechar sus habilidades si quiere salvarse a si mismo y a quienes lo rodean.</p>
+                    <div class="genre-features">
+                        <div class="genres">
+                            <h3>Géneros</h3>
+                            <ul>
+                                <li>Aventura</li>
+                                <li>Simulación</li>
+                                <li>Exploración</li>
+                                <li>Ciencia Ficción</li>
+                            </ul>
+                        </div>
+                        <div class="features">
+                            <h3>Funciones</h3>
+                            <ul>
+                                <li>Un solo jugador</li>
+                                <li>Control completo con teclado</li>
+                                <li>Logros</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h2>Cifro: La Aventura Cuántica de un Héroe Felino</h2>
+                    <p id="longDescription">Cifro es un ambicioso juego de aventuras en 2D con un encantador estilo pixel-art. Te pondrás en las patas de Cifro, un prodigio matemático felino cuya astucia es la clave para desentrañar los misterios que amenazan al mundo y a él mismo. En esta aventura educativa, pero con una experiencia de juego real y desafiante, deberás usar tus habilidades numéricas para enfrentarte a temibles Deidades Matemáticas que pondrán a prueba tu ingenio. A medida que avances, desbloquearás poderosos amuletos matemáticos que te otorgarán nuevas habilidades y te acercarán a la victoria. ¡Prepárate para calcular tu camino hacia la gloria!</p>
+                    <button class="show-more-btn" id="showMoreBtn">Mostrar más <span class="arrow-down">▼</span></button>
+                </section>
+
+                <section class="achievements" id="logrosContent">
+                    <h2>Logros disponibles</h2>
+                    <ul>
+                        <li>Primer Paso: ¡Completa el tutorial!</li>
+                        <li>Maestro matemático: Enfrenta 10 enemigos.</li>
+                        <li>Alma Solitaria: Termina el juego sin recibir daño.</li>
+                        <li>Explorador Audaz: Descubre todas las áreas del mapa.</li>
+                        <li>Maestro del esquive: Esquiva 100 veces.</li>
+                    </ul>
+                </section>
+
+                <section class="about-game">
+                    <h2>Acerca de Arithmia</h2>
+                    <p>Arithmia sumerge a los jugadores en una increíble aventura en la que enfrentaran a las matemáticas para salvar el mundo y a si mismo a través de acertijos y combates interesantes.</p>
+                </section>
+
+                <section class="system-requirements">
+                    <h2>Requisitos del sistema</h2>
+                    <div class="requirements-grid">
+                        <div class="requirement-column">
+                            <h3>MÍNIMO</h3>
+                            <ul>
+                                <li>Sistema Operativo: Windows 10 de 64 bits</li>
+                                <li>Procesador: Intel Core i5-4690 / AMD FX-8350</li>
+                                <li>Memoria: 8 GB de RAM</li>
+                                <li>Gráficos: NVIDIA GeForce GTX 770 / AMD Radeon R9 290</li>
+                                <li>DirectX: Versión 11</li>
+                                <li>Almacenamiento: 25 GB de espacio disponible</li>
+                            </ul>
+                        </div>
+                        <div class="requirement-column">
+                            <h3>RECOMENDADO</h3>
+                            <ul>
+                                <li>Sistema Operativo: Windows 10 de 64 bits</li>
+                                <li>Procesador: Intel Core i7-6700K / AMD Ryzen 5 1600</li>
+                                <li>Memoria: 16 GB de RAM</li>
+                                <li>Gráficos: NVIDIA GeForce GTX 1070 / AMD Radeon RX 580</li>
+                                <li>DirectX: Versión 12</li>
+                                <li>Almacenamiento: 25 GB de espacio disponible (SSD recomendado)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="game-sidebar">
+                <section class="additional-info">
+                    <div class="info-item">
+                        <span>Reembolsable</span>
+                        <a href="#" class="refund-details">Si <i class="fas fa-info-circle info-icon"></i></a>
+                    </div>
+                    <div class="info-item">
+                        <span>Tipo de reembolso:</span>
+                        <a href="#" class="automatic-refund">Atencion al cliente <i class="fas fa-info-circle info-icon"></i></a>
+                    </div>
+                    <div class="info-item">
+                        <span>Desarrolladora:</span>
+                        <span>Yema´s Studios</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Editora:</span>
+                        <span>Yema´s Studios</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Fecha de lanzamiento:</span>
+                        <span>01/09/2025</span>
+                    </div>
+                    <div class="info-item platforms">
+                        <span>Plataforma:</span>
+                        <span><i class="fab fa-windows"></i></span>
+                    </div>
+                </section>
+
+                <section class="user-actions">
+                    <button class="share-btn" id="shareBtn"><i class="fas fa-share-alt"></i> Compartir</button>
+                    <button class="report-btn" id="reportBtn"><i class="fas fa-flag"></i> Denunciar</button>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Yema´s Studios. Todos los derechos reservados.</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/profile.php?id=61573976945687"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.tiktok.com/@yemas.studios"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.youtube.com/@Yemas_Studios"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/yemas_studios/"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="/tienda/tienda.js"></script>
+</body>
+</html>

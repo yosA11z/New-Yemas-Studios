@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportar Problema o Bug</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-gradient: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%); /* Degradado principal */
+            --form-bg: #FFFFFF;
+            --text-color: #333333;
+            --label-color: #666666;
+            --input-bg: #F8F9FA;
+            --input-border: #E0E0E0;
+            --focus-color: #007BFF; /* Azul para enfoque */
+            --button-bg: #007BFF;
+            --button-hover-bg: #0056B3;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif; /* Fuente Poppins */
+            background: var(--main-gradient); /* Aplicamos el degradado al body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden; /* Evita el scroll del body */
+            position: relative;
+        }
+
+        /* Formas decorativas de fondo simplificadas */
+        .decoration-shape {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            transform-origin: center;
+            opacity: 0.8;
+            filter: blur(1px); /* Suave desenfoque */
+        }
+        .shape-1 { top: 10%; right: 5%; width: 40px; height: 120px; transform: rotate(30deg); }
+        .shape-2 { bottom: 20%; right: 8%; width: 60px; height: 60px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.15); } /* Círculo */
+        .shape-3 { top: 40%; right: -2%; width: 25px; height: 180px; transform: rotate(-15deg); }
+
+
+        .form-window {
+            background-color: var(--form-bg); /* Fondo blanco para toda la ventana */
+            border-radius: 15px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada para el efecto flotante */
+            width: 90%;
+            max-width: 800px;
+            min-height: 500px; /* Se mantiene una min-height razonable */
+            max-height: calc(100vh - 40px); /* Ajusta a la altura del viewport - padding body */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column; /* Apila el header y el contenido */
+            position: relative;
+            z-index: 10;
+            overflow: hidden; /* Para que las esquinas redondeadas funcionen */
+
+            /* Estilo de la barra de título simulada */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px); /* Blur más fuerte para la "ventana" */
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .window-header {
+            background-color: rgba(255, 255, 255, 0.15); /* Barra de título semitransparente */
+            padding: 10px 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            cursor: pointer; /* Se mantiene el cursor para indicar clicable */
+        }
+        .window-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #FF5F56; /* Rojo */
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .window-button.yellow { background-color: #FFBD2E; }
+        .window-button.green { background-color: #27C93F; }
+
+
+        .form-content-wrapper {
+            display: flex;
+            flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
+            align-items: stretch;
+        }
+
+        .form-area {
+            flex: 1; /* Ocupa todo el espacio horizontal disponible a la izquierda de illustration-area */
+            padding: 35px;
+            box-sizing: border-box;
+            background-color: var(--form-bg); /* Fondo blanco del formulario */
+            overflow-y: auto; /* Scrollable si el contenido es demasiado largo */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .illustration-area {
+            flex: 0.6; /* Área de ilustración ligeramente más pequeña */
+            background: var(--main-gradient); /* Mismo degradado que el fondo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+            min-height: 100%; /* Este es crucial para que flexbox estire ambos lados (el "pedazo azul" podría aparecer si el form-area es más corto) */
+        }
+        /* Formas internas de la ilustración simplificadas */
+        .illustration-area::before, .illustration-area::after {
+            content: '';
+            position: absolute;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            filter: blur(1px);
+        }
+        .illustration-area::before {
+            width: 70%; height: 25px; top: 20%; left: -10%; transform: rotate(-35deg);
+        }
+        .illustration-area::after {
+            width: 50%; height: 20px; bottom: 25%; right: -5%; transform: rotate(20deg);
+        }
+        .illustration-area .shape-inner-circle {
+            position: absolute; width: 50px; height: 50px; top: 45%; left: 15%; background-color: rgba(255, 255, 255, 0.25); border-radius: 50%;
+        }
+
+
+        .form-header {
+            margin-bottom: 25px;
+        }
+        .form-header h2 {
+            font-size: 2.1em;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .form-header p {
+            font-size: 0.9em;
+            color: var(--label-color);
+            line-height: 1.4;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 140px;
+            margin-bottom: 0;
+        }
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--label-color);
+            font-size: 0.85em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.92em;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--focus-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+            background-color: var(--form-bg);
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            max-height: 120px;
+        }
+
+        .checkbox-group {
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.88em;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            font-weight: normal;
+            color: var(--label-color);
+        }
+        .checkbox-group input[type="radio"] {
+            margin-right: 5px;
+            width: auto;
+            transform: scale(1);
+            accent-color: var(--focus-color);
+        }
+
+        button {
+            background-color: var(--button-bg);
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 25px;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+
+        #confirmationMessage {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #28A745;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .form-window {
+                min-height: unset; /* Deja que la altura se ajuste en móviles */
+                max-height: calc(100vh - 20px);
+            }
+            .form-content-wrapper {
+                flex-direction: column; /* Apila el formulario y la ilustración */
+                align-items: stretch; /* Asegura que ambos se estiren a lo ancho */
+            }
+            .form-area {
+                padding: 25px;
+                overflow-y: auto; /* Mantener scroll interno si es necesario */
+            }
+            .illustration-area {
+                height: 120px; /* Altura fija para la ilustración en móvil */
+                min-height: unset; /* Restablecer min-height en móvil */
+                border-top-right-radius: 0;
+                border-bottom-left-radius: 15px;
+                border-bottom-right-radius: 15px;
+            }
+            .form-header h2 {
+                font-size: 1.7em;
+            }
+            .form-header p {
+                font-size: 0.8em;
+            }
+            .form-group {
+                margin-bottom: 12px;
+            }
+            input[type="text"], input[type="email"], select, textarea {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            textarea {
+                min-height: 55px;
+            }
+            .checkbox-group {
+                gap: 8px;
+                font-size: 0.85em;
+            }
+            button {
+                padding: 9px 18px;
+                font-size: 0.95em;
+                margin-top: 20px;
+            }
+            /* Oculta las formas decorativas y las formas internas de la ilustración en móvil para mayor limpieza */
+            .decoration-shape, .illustration-area::before, .illustration-area::after, .illustration-area .shape-inner-circle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration-shape shape-1"></div>
+    <div class="decoration-shape shape-2"></div>
+    <div class="decoration-shape shape-3"></div>
+
+    <div class="form-window">
+        <div class="window-header">
+            <div class="window-button"></div>
+            <div class="window-button yellow"></div>
+            <div class="window-button green"></div>
+        </div>
+
+        <div class="form-content-wrapper">
+            <div class="form-area">
+                <div class="form-header">
+                    <h2>Reportar un Problema o Bug</h2>
+                    <p>Por favor, describe el inconveniente con el mayor detalle posible para que podamos ayudarte.</p>
+                </div>
+
+                <form id="bugReportForm" action="https://formspree.io/f/mnnvvnbv" method="POST">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gameName">Nombre del Juego:</label>
+                            <input type="text" id="gameName" name="Nombre del Juego" placeholder="Ej: Arithmia" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="platform">Plataforma:</label>
+                            <select id="platform" name="Plataforma" required>
+                                <option value="">Selecciona una plataforma</option>
+                                <option value="PC">PC</option>
+                                <option value="Mobile">Móvil (iOS/Android)</option>
+                                <option value="Other">Otra</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="issueType">Tipo de Problema:</label>
+                            <select id="issueType" name="Tipo de Problema" required>
+                                <option value="">Selecciona el tipo de problema</option>
+                                <option value="Bug Visual">Bug Visual/Gráfico</option>
+                                <option value="Bug de Jugabilidad">Bug de Jugabilidad</option>
+                                <option value="Bug de Audio">Bug de Audio</option>
+                                <option value="Crash">Caída del Juego (Crash)</option>
+                                <option value="Problema de Rendimiento">Problema de Rendimiento (FPS bajos, lag)</option>
+                                <option value="Exploit">Abuso</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Severidad del Problema:</label>
+                            <div class="checkbox-group">
+                                <label><input type="radio" name="Severidad" value="Baja" required> Baja</label>
+                                <label><input type="radio" name="Severidad" value="Media"> Media</label>
+                                <label><input type="radio" name="Severidad" value="Alta"> Alta</label>
+                                <label><input type="radio" name="Severidad" value="Crítica"> Crítica</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="stepsToReproduce">Pasos para Reproducir (opcional):</label>
+                        <textarea id="stepsToReproduce" name="Pasos para Reproducir" placeholder="1. Abre el juego
+2. Ve al menú de inventario
+3. Observa que el texto está borroso"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="description">Descripción Detallada del Problema:</label>
+                        <textarea id="description" name="Descripcion" placeholder="Describe el problema con el mayor detalle posible: cuándo ocurre, cómo replicarlo, qué pasa exactamente." required></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="contactEmail">Tu Email (opcional, para seguimiento):</label>
+                        <input type="email" id="contactEmail" name="_replyto" placeholder="tu@ejemplo.com">
+                    </div>
+
+                    <button type="submit">Enviar Reporte</button>
+                </form>
+            </div>
+
+            <div class="illustration-area">
+                <div class="shape-inner-circle"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmationMessage">
+        ¡Gracias! Tu reporte ha sido enviado con éxito.
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bugReportForm');
+            const confirmationMsg = document.getElementById('confirmationMessage');
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Detiene el envío normal del formulario
+
+                const formData = new FormData(form); // Obtiene los datos del formulario
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json' // Importante para que Formspree responda con JSON
+                        }
+                    });
+
+                    if (response.ok) {
+                        confirmationMsg.textContent = '¡Gracias! Tu reporte ha sido enviado con éxito.';
+                        confirmationMsg.style.backgroundColor = '#28A745'; // Verde para éxito
+                        confirmationMsg.style.display = 'block';
+
+                        // Limpiar el formulario
+                        form.reset();
+                        document.querySelectorAll('input[name="Severidad"]').forEach(radio => radio.checked = false);
+
+                    } else {
+                        const data = await response.json();
+                        let errorMessage = 'Oops! Hubo un problema al enviar tu reporte.';
+                        if (data.errors) {
+                            errorMessage = data.errors.map(error => error.message).join(', ');
+                        }
+                        confirmationMsg.textContent = errorMessage;
+                        confirmationMsg.style.backgroundColor = '#DC3545'; // Rojo para error
+                        confirmationMsg.style.display = 'block';
+                    }
+
+                } catch (error) {
+                    console.error('Error al enviar el formulario:', error);
+                    confirmationMsg.textContent = 'Hubo un error de conexión. Inténtalo de nuevo.';
+                    confirmationMsg.style.backgroundColor = '#DC3545'; // Rojo para error
+                    confirmationMsg.style.display = 'block';
+                }
+
+                // Ocultar el mensaje después de 5 segundos
+                setTimeout(() => {
+                    confirmationMsg.style.display = 'none';
+                }, 5000);
+            });
+
+            // Evento para el clic en la barra de título (simulando cerrar/salir)
+            const windowHeader = document.querySelector('.window-header');
+            if (windowHeader) {
+                windowHeader.addEventListener('click', (event) => {
+                    // Evita que el clic se propague al div 'form-window' si también tiene un listener
+                    event.stopPropagation();
+                    window.location.href = '/tienda/tienda.html'; // Usar ruta absoluta
+                });
+            }
+
+            // Si quieres que un clic en CUALQUIER PARTE de la ventana del formulario (excepto inputs) redirija:
+            
+        });
+    </script>
+</body>
+</html>
