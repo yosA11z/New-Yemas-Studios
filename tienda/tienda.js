@@ -320,8 +320,8 @@ $payButton.addEventListener("click", async (e) => {
             }],
             mode: "payment",
             // Asegúrate de que estas URLs sean válidas en tu servidor o dominio.
-            successUrl: "https://yemas-studios.vercel.app/pasareladepago/succes.html", // ¡Actualiza a tu dominio real!
-            cancelUrl: "https://yemas-studios.vercel.app/pasareladepago/cancel.html" // ¡Actualiza a tu dominio real!
+            successUrl: "https://new-yemas-studios.vercel.app/pasareladepago/succes.html", // ¡Actualiza a tu dominio real!
+            cancelUrl: "https://new-yemas-studios.vercel.app/pasareladepago/cancel.html" // ¡Actualiza a tu dominio real!
         });
 
         if (result.error) {
